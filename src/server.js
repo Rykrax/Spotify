@@ -4,9 +4,9 @@ import path from 'path';
 import { configViewEngine} from './config/viewEngine.js';
 import {} from 'dotenv/config'
 import { fileURLToPath } from 'url';
-import { CONNECT_DB, Track} from './model/mongodb.js';
+import { CONNECT_DB} from './model/mongodb.js';
 import webRouter from './routes/web.js';
-
+import apiRouter from './routes/api.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,10 +19,13 @@ const START_SERVER = () => {
 
     // Khai báo router
     app.use('/', webRouter); // Sử dụng router web
+    app.use('/api', apiRouter); // Sử dụng router api
     app.use(cors());
     app.use(express.json());
     // app.use(express.urlencoded({ extended: true }));
+    console.log("check >>", path.join(__dirname, '..'))
     app.use(express.static(path.join(__dirname, 'public')));
+    app.use('/node_modules', express.static(path.join(__dirname, '../node_modules')));
 
     configViewEngine(app); // Gọi hàm cấu hình view engine EJS
 

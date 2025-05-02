@@ -64,10 +64,10 @@ const run = async () => {
 
     // Thêm bài nhạc (tùy chọn)
     const newTrack = new Track({
-        title: 'Một đời',
-        artist: '14 Casper _ Bon Nghiêm (feat. buitruonglinh)',
-        image_url: 'https://res.cloudinary.com/dmcewgkd6/image/upload/v1746173748/1671530957863_640_yauvlp.jpg',
-        src_url: 'https://res.cloudinary.com/dmcewgkd6/video/upload/v1746173770/m%E1%BB%99t_%C4%91%E1%BB%9Di_-_14_Casper___Bon_Nghi%C3%AAm_feat._buitruonglinh_Track_03_-_Album_S%E1%BB%90_KH%C3%94NG_c7nzhv.mp3'
+        title: 'Mình cùng nhau đóng băng',
+        artist: 'Thuỳ Chi (Cover)',
+        image_url: 'https://res.cloudinary.com/dmcewgkd6/image/upload/v1746195092/artworks-4jhUDzhMFUg4ceeW-NmQxzg-t500x500_tqchjr.jpg',
+        src_url: 'https://res.cloudinary.com/dmcewgkd6/video/upload/v1746195087/M%C3%ACnh_C%C3%B9ng_Nhau_%C4%90%C3%B3ng_B%C4%83ng___Th%C3%B9y_Chi___FPT_Polytechnic_mmntsq.mp3'
     });
 
     await newTrack.save();
@@ -76,6 +76,6 @@ const run = async () => {
     // Optional: process.exit(); nếu dùng script độc lập
 };
 
-run();
+// run();
 
 export { CONNECT_DB, Track };

@@ -1,5 +1,5 @@
 const getHomepage = (req, res) => {
-    res.render('test.ejs', { title: 'Test Page' });
+    res.render('main.ejs', { title: 'Test Page' });
 };
 
 export {
