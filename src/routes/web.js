@@ -1,9 +1,8 @@
 import express from 'express';
+import { getHomepage } from '../controller/homeController.js';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.render('test.ejs', { title: 'Test Page' });
-});
+router.get('/', getHomepage);
 
 export default router;

@@ -10,7 +10,7 @@ const CONNECT_DB = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        // console.log("MongoDB kết nối thành công trong mongodb.js.");
+        console.log("MongoDB đã kết nối.");
     } catch (error) {
         console.error("MongoDB lỗi kết nối:", error);
         process.exit(1);
@@ -48,15 +48,34 @@ trackSchema.pre('save', async function (next) {
 
 const Track = mongoose.model('Track', trackSchema);
 
-// Thêm một bài nhạc mới
-const newTrack = new Track({
-    title: 'Một đời',
-    artist: '14 Casper _ Bon Nghiêm (feat. buitruonglinh)',
-    image_url: 'https://res.cloudinary.com/dmcewgkd6/image/upload/v1746173748/1671530957863_640_yauvlp.jpg',
-    src_url: 'https://res.cloudinary.com/dmcewgkd6/video/upload/v1746173770/m%E1%BB%99t_%C4%91%E1%BB%9Di_-_14_Casper___Bon_Nghi%C3%AAm_feat._buitruonglinh_Track_03_-_Album_S%E1%BB%90_KH%C3%94NG_c7nzhv.mp3'
-});
+// Reset lại track_id counter về 0
+const resetTrackIdCounter = async () => {
+    await Counter.findByIdAndUpdate(
+        { _id: 'track_id' },
+        { seq: 0 },
+        { upsert: true }
+    );
+    console.log("Đã reset track_id về 1 (seq = 0).");
+};
 
-// await newTrack.save();
-console.log('Track ID:', newTrack.track_id);
+const run = async () => {
+    await CONNECT_DB();
+    // await resetTrackIdCounter(); // ← Reset ngay sau khi kết nối DB
 
-export { CONNECT_DB, Track};
+    // Thêm bài nhạc (tùy chọn)
+    const newTrack = new Track({
+        title: 'Một đời',
+        artist: '14 Casper _ Bon Nghiêm (feat. buitruonglinh)',
+        image_url: 'https://res.cloudinary.com/dmcewgkd6/image/upload/v1746173748/1671530957863_640_yauvlp.jpg',
+        src_url: 'https://res.cloudinary.com/dmcewgkd6/video/upload/v1746173770/m%E1%BB%99t_%C4%91%E1%BB%9Di_-_14_Casper___Bon_Nghi%C3%AAm_feat._buitruonglinh_Track_03_-_Album_S%E1%BB%90_KH%C3%94NG_c7nzhv.mp3'
+    });
+
+    await newTrack.save();
+    console.log('Track mới đã được lưu với ID:', newTrack.track_id);
+
+    // Optional: process.exit(); nếu dùng script độc lập
+};
+
+run();
+
+export { CONNECT_DB, Track };

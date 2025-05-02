@@ -16,6 +16,8 @@ const HOSTNAME = process.env.HOST_NAME || 'localhost';
 
 const START_SERVER = () => {
     console.log("Bắt đầu khởi động server trong server.js...")
+
+    // Khai báo router
     app.use('/', webRouter); // Sử dụng router web
     app.use(cors());
     app.use(express.json());
