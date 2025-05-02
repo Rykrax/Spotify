@@ -35,28 +35,73 @@
             </div>
         </div>
 
-        <div class="track">
-            <div class="row">
-                <div class="col lg-6">
-                    <div class="track-container d-flex align-items-center">
-                        <div class="track-id">
-                            1
+        <div class="track-list">
+            <!-- <div class="track">
+                <div class="row">
+                    <div class="col lg-6">
+                        <div class="track-container d-flex align-items-center">
+                            <div class="track-id">
+                                1
+                            </div>
+                            <img src="../public/img/1671530957863_640.jpg" alt="">
+                
+                            <div class="track-info">
+                                <p class="track-title">Một đời</p>
+                                <p class="artist">14 Casper _ Bon Nghiêm (feat. buitruonglinh)</p>
+                            </div>
                         </div>
-                        <img src="/img/1671530957863_640.jpg" alt="">
-            
-                        <div class="track-info">
-                            <p class="track-title">Một đời</p>
-                            <p class="artist">14 Casper _ Bon Nghiêm (feat. buitruonglinh)</p>
+                    </div>
+                    <div class="col lg-6">
+                        <div class="track-duration d-flex align-items-center justify-content-end" style="height: 100%;"> 
+                            <p>5:28</p>
                         </div>
                     </div>
                 </div>
-                <div class="col lg-6">
-                    <div class="track-duration d-flex align-items-center justify-content-end" style="height: 100%;"> 
-                        <p>5:28</p>
-                    </div>
-                </div>
-            </div>
+            </div> -->
         </div>
     </div>
+
+    <script>
+        let loadTracks = async () => {
+            fetch('/api/get-tracks')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    let tracks = data;
+                    let trackList = document.querySelector('.track-list');
+                    trackList.innerHTML = ''; 
+
+                    tracks.forEach((track, index) => {
+                        let trackItem = document.createElement('div');
+                        trackItem.className = 'track';
+                        trackItem.innerHTML = `
+                                <div class="row">
+                                    <div class="col lg-6">
+                                        <div class="track-container d-flex align-items-center">
+                                            <div class="track-id">${index + 1}</div>
+                                            <img src="${track.image_url}" alt="">
+                                            <div class="track-info">
+                                                <p class="track-title">${track.title}</p>
+                                                <p class="artist">${track.artist}</p>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                    <div class="col lg-6">
+                                        <div class="track-duration d-flex align-items-center justify-content-end" style="height: 100%;"> 
+                                            <p>${track.duration}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                        `;
+                        trackList.appendChild(trackItem);
+                    });
+        })
+                .catch(error => console.error('Error fetching tracks:', error));
+        };
+
+        loadTracks();
+
+        
+    </script>
 </body>
 </html>
