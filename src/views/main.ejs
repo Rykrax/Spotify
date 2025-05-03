@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="track-list">
+        <div class="track-list mb-5">
             <!-- <div class="track">
                 <div class="row">
                     <div class="col lg-6">
@@ -59,49 +59,80 @@
                 </div>
             </div> -->
         </div>
+
+        <div class="audio d-flex justify-content-center align-items-center mb-3">
+            <audio controls>
+                <source src="" type="audio/mpeg">
+                Trình duyệt của bạn không hỗ trợ thẻ audio.
+              </audio>
+        </div>
     </div>
 
     <script>
         let loadTracks = async () => {
-            fetch('/api/get-tracks')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    let tracks = data;
-                    let trackList = document.querySelector('.track-list');
-                    trackList.innerHTML = ''; 
-
-                    tracks.forEach((track, index) => {
-                        let trackItem = document.createElement('div');
-                        trackItem.className = 'track';
-                        trackItem.innerHTML = `
-                                <div class="row">
-                                    <div class="col lg-6">
-                                        <div class="track-container d-flex align-items-center">
-                                            <div class="track-id">${index + 1}</div>
-                                            <img src="${track.image_url}" alt="">
-                                            <div class="track-info">
-                                                <p class="track-title">${track.title}</p>
-                                                <p class="artist">${track.artist}</p>
-                                            </div>  
-                                        </div>
-                                    </div>
-                                    <div class="col lg-6">
-                                        <div class="track-duration d-flex align-items-center justify-content-end" style="height: 100%;"> 
-                                            <p>${track.duration}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                        `;
-                        trackList.appendChild(trackItem);
-                    });
-        })
-                .catch(error => console.error('Error fetching tracks:', error));
+            const response = await fetch('/api/get-tracks');
+            const tracks = await response.json();
+            const trackList = document.querySelector('.track-list');
+            const audioPlayer = document.querySelector('audio');
+            const source = audioPlayer.querySelector('source');
+    
+            trackList.innerHTML = '';
+    
+            for (let i = 0; i < tracks.length; i++) {
+                const track = tracks[i];
+    
+                const trackItem = document.createElement('div');
+                trackItem.className = 'track';
+                trackItem.style.cursor = 'pointer';
+    
+                // Create a hidden audio element to get duration
+                const tempAudio = new Audio();
+                tempAudio.src = track.src_url;
+    
+                // Khi metadata đã load => lấy thời gian
+                tempAudio.addEventListener('loadedmetadata', () => {
+                    const totalSeconds = tempAudio.duration;
+                    const minutes = Math.floor(totalSeconds / 60);
+                    const seconds = Math.floor(totalSeconds % 60).toString().padStart(2, '0');
+                    const formattedDuration = `${minutes}:${seconds}`;
+    
+                    // Update phần tử sau khi đã có thời gian
+                    trackItem.querySelector('.track-duration p').textContent = formattedDuration;
+                });
+    
+                // Click để phát nhạc
+                trackItem.addEventListener('click', () => {
+                    source.src = track.src_url;
+                    audioPlayer.load();
+                    audioPlayer.play();
+                });
+    
+                trackItem.innerHTML = `
+                    <div class="row">
+                        <div class="col lg-6">
+                            <div class="track-container d-flex align-items-center">
+                                <div class="track-id">${i + 1}</div>
+                                <img src="${track.image_url}" alt="" width="50" height="50">
+                                <div class="track-info">
+                                    <p class="track-title">${track.title}</p>
+                                    <p class="artist">${track.artist}</p>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="col lg-6">
+                            <div class="track-duration d-flex align-items-center justify-content-end" style="height: 100%;"> 
+                                <p>Đang tải...</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+    
+                trackList.appendChild(trackItem);
+            }
         };
-
+    
         loadTracks();
-
-        
     </script>
+    
 </body>
 </html>
